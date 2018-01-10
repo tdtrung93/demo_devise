@@ -1,6 +1,8 @@
 class ProductsController < ApplicationController
+  load_and_authorize_resource  
   def index
     @products = Product.all
+    @product
   end
 
   def show
@@ -28,6 +30,7 @@ class ProductsController < ApplicationController
   end
 
   def update
+    set_product
     respond_to do |format|
       if @product.update(product_params)
         format.html { redirect_to products_url, notice: 'San pham da duoc cap nhat.' }
@@ -51,6 +54,6 @@ class ProductsController < ApplicationController
     end
 
     def product_params
-      params.require(:product).permit(:name, :brand, :price, :description, :Quantity)
+      params.require(:product).permit(:name, :brand, :price, :description, :Quantity, :offer, :oldPrice, {image: []})
     end
 end

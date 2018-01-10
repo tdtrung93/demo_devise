@@ -1,37 +1,181 @@
-<div class="container">
-  <p id="notice"><%= notice %></p>
-
-  <h1 style="color: blue;">Products</h1>
-
-  <table class="table table-bordered table-hover">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Brand</th>
-        <th>Price</th>
-        <th>Description</th>
-        <th>Quantity</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @products.each do |product| %>
-        <tr>
-          <td><%= product.name %></td>
-          <td><%= product.brand %></td>
-          <td><%= product.price %></td>
-          <td><%= product.description %></td>
-          <td><%= product.Quantity %></td>
-          <td><%= link_to 'Show', product %></td>
-          <td><%= link_to 'Edit', edit_product_path(product) %></td>
-          <td><%= link_to 'Delete', product, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-
-  <br>
-  <div class="text-center" style="margin-bottom: 20px;">
-    <%= link_to 'New Product', new_product_path, class: "btn btn-primary" %>
+<body id="home">
+  <div id="wrapper">
+    <div class="home-slider">
+      <div class="container">
+        <div id="sequence">
+          <div class="sequence-prev"><i class="fa fa-angle-left"></i></div>
+          <div class="sequence-next"><i class="fa fa-angle-right"></i></div>
+          <ul class="sequence-canvas">
+            <li class="animate-in">
+              <div class="flat-caption caption1 formLeft delay300 text-center"><span class="suphead">Mở bán Galaxy Note FE</span></div>
+              <div class="flat-caption caption2 formLeft delay400 text-center">
+                <h1 style="margin-top: 10px; color: blue;">Giá rẻ nhất Việt Nam</h1>
+              </div>
+              <div class="flat-caption caption3 formLeft delay500 text-center" style="margin-top: 50px;">
+                <p>Chỉ với <strong style="color: red; font-size: 20px;"><u>11.990.000đ</u></strong> bạn sẽ sở hữu ngay 1 chiếc điện thoại <br/>Samsung galaxy Note FE chính hãng cực chất</p>
+              </div>
+              <div class="flat-button caption4 formLeft delay600 text-center" style="margin-top: 40px;"><a class="more" href="#">Mua ngay</a></div>
+              <div class="flat-image formBottom delay200" data-duration="5" data-bottom="true"><img src="images/slider-image-01.png" alt=""></div>
+            </li>
+            <li>
+              <div class="flat-caption caption1 formLeft delay400">
+                <h1>Sắm Iphone X chính hãng Việt Nam</h1>
+              </div>
+              <div class="flat-caption caption3 formLeft delay500">
+                <h2 style="margin-top: 40px; color: blue;">Tiết kiệm lên đến 6 triệu đồng.</h2>
+              </div>
+              <div class="flat-button caption5 formLeft delay600"><a class="more" href="#">Mua ngay</a></div>
+              <div class="flat-image formBottom delay200" data-bottom="true"><img src="images/slider-image-02.png" alt=""></div>
+            </li>
+            <li>
+              <div class="flat-caption caption1 formLeft delay300 text-center"><span class="suphead">redmi note 4x</span></div>
+              <div class="flat-caption caption2 formLeft delay400 text-center">
+                <h2 style="color: blue;">snap dragon | ram 3gb | pin 4100mAh</h2>
+              </div>
+              <div class="flat-caption caption3 formLeft delay500 text-center">
+                <p style="font-size: 18px;">Giá chỉ từ:<br/><h3 style="color: red;">2.690.000 VNĐ</h3></p>
+              </div>
+              <div class="flat-button caption4 formLeft delay600 text-center" style="margin-top: 30px;"><a class="more" href="#">Mua ngay</a></div>
+              <div class="flat-image formBottom delay200" data-bottom="true"><img src="images/slider-image-03.png" alt=""></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="promotion-banner">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4 col-sm-4 col-xs-4">
+              <div class="promo-box"><img src="images/promotion-01.png" alt=""></div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-4">
+              <div class="promo-box"><img src="images/promotion-02.png" alt=""></div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-4">
+              <div class="promo-box"><img src="images/promotion-03.png" alt=""></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="container_fullwidth">
+      <div class="container">
+        <div class="row">
+          <% @products.each do |product| %>
+            <div class="col-md-3 col-sm-2 col-xs-4">
+              <div class="products">
+                <% if product.offer == nil %>
+                <% else %>
+                  <div class="offer">-<%= product.offer %>%</div>
+                <% end %>
+                <div class="thumbnail123">
+                  <a href="details.html"><%= image_tag product.image %></a>
+                </div>
+                <div class="content">
+                  <a class="productname"><%= product.name %></a>
+                </div>
+                <h4 class="price"><%= product.price %></h4>
+                <% if product.oldPrice > product.price.to_i %>
+                  <h5 class="oldprice">Giá cũ: <%= product.oldPrice %>đ<h5>
+                <% end %>
+                <div class="button_group">
+                  <button data-toggle="modal" data-target="#myModal" class="button add-cart" type="button" data-item-id="<%= product.id %>">Thêm vào giỏ hàng</button>
+                  <button class="button wishlist" type="button">
+                    <i class="fa fa-heart-o"></i>
+                  </button>
+                  <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog modal-lg">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <h4 class="modal-title">Giỏ hàng của bạn (<p class="modal-title" style="display: inline; font-size: 16px;"><%= current_user.carts.count %></p> san pham)</h4>
+                        </div>
+                        <table class="table table-bordered table-hover" style="overflow: auto;max-height: 300px; border: none;">
+                          <thead>
+                            <tr class="active">
+                              <th>Sản phẩm</th>
+                              <th>Đơn giá</th>
+                              <th>Số lượng</th>
+                              <th>Thành tiền</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% current_user.carts.each do |cart| %>
+                              <tr>
+                                <td>
+                                  <%= image_tag cart.product.image_url.to_s, style: "width: 60px; height: 80px; float: left;" %>
+                                  <div style="overflow: auto; margin-top: 10px; padding-left: 10px;"><%= cart.product.name %><div> 
+                                  <div class="delete-cart" style="margin-top: 10px;" data-cart-id="<%= cart.id %>"><span style="background: url(../images/trash.png) no-repeat;">...</span><buton type="button" class="btn" style="color: red; margin-left: 5px;">Huy bo san pham</button></div>
+                                </td>
+                                <td><%= cart.product.price %></td>
+                                <td><%= cart.product.Quantity %></td>
+                                <td><%= cart.product.price.to_i * cart.product.Quantity %></td>
+                              </tr>
+                            <% end -%>
+                          </tbody>
+                        </table>
+                        <div class="modal-footer">
+                          <h4>Thành tiền: <a style="color: red; font-size: 20px;"><%=  %>đ</a></h4>
+                          <h5>Giá đã bao gồm VAT</h5>
+                          <div>
+                            <a href="" data-dismiss="modal" style="color: blue;float: left; margin-top: 30px;">< Tiếp tục mua hàng</a>
+                          </div>
+                          <div class="btn btn-defaul" style="float: right;">
+                            <button type="button" style="background-color: red; color: #fff;">Tiến hành thanh toán</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
+  <script type="text/javascript">
+    $('document').ready(function() {
+
+      var token = $( 'meta[name="csrf-token"]' ).attr( 'content' );
+      $.ajaxSetup( {
+        beforeSend: function ( xhr ) {
+          xhr.setRequestHeader( 'X-CSRF-Token', token );
+        }
+      });
+      console.log(token);
+      console.log($('.cart_no').html());
+      $('.add-cart').click(function() {
+        var item_id = $(this).data('item-id');
+        var add_cart = $(this);
+        $.post("/carts", {
+          product_id: item_id,
+        }, function(data, status){
+            console.log(data);
+            var quantity_cart = data.quantity_cart;
+            console.log(quantity_cart);
+            $('.cart_no, .modal-title1').html(quantity_cart);
+
+          });
+      });
+
+      $('.delete-cart').click(function() {
+        var cart_id = $(this).data('cart-id');
+        var delete_cart = $(this);
+        console.log(delete_cart);
+        $.ajax({
+          url: '/carts/' + cart_id,
+          method: 'DELETE',
+          success: function(data) {
+            console.log(data);
+            var quantity_cart = data.quantity_cart;
+            console.log(quantity_cart);
+            $('.cart_no, p.modal-title').html(quantity_cart);
+            delete_cart.closest('tr').hide(300);
+          }
+        });
+      });
+    });
+  </script>
+</body>

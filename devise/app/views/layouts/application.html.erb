@@ -1,16 +1,364 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Devise</title>
+    <title>Welcome to mobile shop</title>
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag '/style.css' %>
+    <%= stylesheet_link_tag '/card.css' %>
+    <%= stylesheet_link_tag '/sequence-looptheme.css' %>
+    <%= stylesheet_link_tag '/flexslider.css' %>
+    <%= stylesheet_link_tag '/bootstrap.css' %>
+    <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/jquery.sequence-min.js"></script>
+    <script type="text/javascript" src="js/jquery.carouFredSel-6.2.1-packed.js"></script>
+    <script defer src="js/jquery.flexslider.js"></script>
+    <script type="text/javascript" src="js/script.min.js" ></script>
   </head>
 
   <body>
-  	<p class="notie"><%= notice %></p>
-  	<p class="alert"><%= alert%></p>
-    <%= yield %>
+    <div class="wrapper">
+      <div class="header">
+        <div class="container">
+        <!-- top banner -->
+          <div class="row">
+            <div class="col-md-2 col-sm-2">
+              <div class="logo">
+                <a href="index.html">
+                  <%= image_tag("logo.png", alt: "Trung93 Mobile") %>
+                </a>
+              </div>
+            </div>
+            <div class="col-md-10 col-sm-10">
+              <!-- top header -->
+              <div class="header_top">
+                <div class="row" style="">
+                  <div class="col-md-3 col-sm-2 col-xs-2">
+                    <ul class="usermenu">
+                      <% if user_signed_in? %>
+                        <li>
+                        <%= link_to('Đăng xuât', destroy_user_session_path, method: :delete, class: 'log') %>        
+                        </li>
+                      <% else %>
+                        <li>
+                        <%= link_to('Đăng nhập', new_user_session_path, class: 'log')  %>  
+                        </li>
+                      <% end %>
+                      <% if user_signed_in? %>
+                        <li>
+                        <%= link_to(@current_user.email, edit_user_registration_path, class: 'user') %>
+                        </li>
+                      <% else %>
+                        <li>
+                        <%= link_to('Đăng ký', new_user_registration_path, class: 'reg')  %>
+                        </li>
+                      <% end %>
+                    </ul>
+                  </div>
+
+                  <div class="col-md-1 col-sm-2 col-xs-2">
+                    <ul class="option_nav">
+                      <li class="dorpdown">
+                        <a href="#">VN</a>
+                        <ul class="subnav">
+                          <li><a href="#">VN</a></li>
+                          <li><a href="#">ENG</a></li>
+                          <li><a href="#">JPN</a></li>
+                        </ul>
+                      </li>                            
+                    </ul>
+                  </div>
+
+                  <div class="col-md-4 col-sm-1 col-xs-1">
+                    <ul class="usermenu">
+                       <li>
+                          <a href="#" class="add"> P1018, CC CT1A-DN2, Ham Nghi, My Dinh 2</a>
+                       </li>                            
+                    </ul>
+                 </div>
+
+                 <div class="col-md-2 col-sm-1 col-xs-1">
+                  <div style="margin-right: 35px;">
+                    <ul class="usermenu">
+                      <li>
+                        <a href="#" class="hotline"> 0164.806.2543</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="col-md-2 col-sm-1 col-xs-1">
+                  <ul class="usermenu" style="margin-right: 75px;">
+                    <li>
+                      <a href="#" class="hotline"> 0129.347.0025</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+           </div>
+                <!-- end top header -->
+              <div class="clearfix"></div>
+              <div class="header_bottom">
+                <!-- search and cart -->
+                <ul class="option">
+                  <li id="search" class="search">
+                  <form><input class="search-submit" type="submit" value=""><input class="search-input" placeholder="Nhập nội dung cần tìm" type="text" value="" name="search"></form>
+                  </li>
+                  <li class="option-cart">
+                    <% if user_signed_in? %>
+                      <a href="#" class="cart-icon" data-toggle="modal" data-target="#myModal">cart <span class="cart_no" ><%= current_user.carts.count %></span></a>
+                      <div class="modal fade" id="myModal" role="dialog" style="z-index: 1;">
+                        <div class="modal-dialog modal-lg" style="z-index: 1;">
+                          <div class="modal-content" style="z-index: 1;">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">Giỏ hàng của bạn (<p class="modal-title" style="display: inline; font-size: 16px;"><%= current_user.carts.count %></p> san pham)</h4>
+                            </div>
+                            <table class="table table-bordered table-hover" style="overflow: auto;max-height: 300px; border: none;">
+                              <thead>
+                                <tr class="active">
+                                  <th>Sản phẩm</th>
+                                  <th>Đơn giá</th>
+                                  <th>Số lượng</th>
+                                  <th>Thành tiền</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <% current_user.carts.each do |cart| %>
+                                  <tr>
+                                    <td>
+                                      <%= image_tag cart.product.image_url.to_s, style: "width: 60px; height: 80px; float: left;" %>
+                                      <div style="overflow: auto; margin-top: 10px; padding-left: 10px;"><%= cart.product.name %><div> 
+                                      <div class="delete-cart" style="margin-top: 10px;" data-cart-id="<%= cart.id %>"><span style="background: url(../images/trash.png) no-repeat;">...</span><buton type="button" class="btn" style="color: red; margin-left: 5px;">Huy bo san pham</button></div> 
+                                    </td>
+                                    <td><%= cart.product.price %></td>
+                                    <td><%= cart.product.Quantity %></td>
+                                    <td><%= cart.product.price.to_i * cart.product.Quantity %></td>
+                                  </tr>
+                                <% end -%>
+                              </tbody>
+                            </table>
+                            <div class="modal-footer">
+                              <h4>Thành tiền: <a style="color: red; font-size: 20px;"><%=  %>đ</a></h4>
+                              <h5>Giá đã bao gồm VAT</h5>
+                              <div>
+                                <a href="" data-dismiss="modal" style="color: blue;float: left; margin-top: 30px;">< Tiếp tục mua hàng</a>
+                              </div>
+                              <div class="btn btn-defaul" style="float: right;">
+                                <button type="button" style="background-color: red; color: #fff;">Tiến hành thanh toán</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <% else %>
+                      <a href="#" class="cart-icon" data-toggle="modal" data-target="#myModal">cart <span class="cart_no"></span></a>
+                    <% end %>
+                  </li>
+                </ul>              
+                    <!-- <ul class="option-cart-item">
+                      <li>
+                        <div class="cart-item">
+                          <div class="image">
+                            <%= image_tag("products/thum/products-01.png", alt: "Iphone X") %>
+                          </div>
+                          <div class="item-description">
+                            <p class="name">Trần Đức Trung</p>
+                            <p>Tên hàng: <span class="light-red">Iphone X</span><br>Số lượng: <span class="light-red">01</span></p>
+                          </div>
+                          <div class="right">
+                            <p class="price">20.000.000 VNĐ</p>
+                            <a href="#" class="remove">
+                              <%= image_tag("remove.png", alt: "remove") %>
+                            </a>
+                          </div>
+                        </div>
+                      </li>
+                      <li><span class="total">Tổng <strong>20.000.000 VNĐ</strong></span><button class="checkout" onClick="location.href='checkout.html'">CheckOut</button></li>
+                    </ul> -->
+                <!-- end search and cart -->
+              <div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button></div>
+                <div class="navbar-collapse collapse">
+                  <ul class="nav navbar-nav">
+                    <li class="dropdown-white">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Trang chủ</a>
+                    </li>
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Điện thoại</a>
+                      <div class="dropdown-menu mega-menu">
+                        <div class="row">
+                          <div class="col-md-6 col-sm-6">
+                            <ul class="mega-menu-links">
+                              <strong><li><h6>Điện thoại</h6></li></strong>
+                              <li><a href="productgird.html">Iphone</a></li>
+                              <li><a href="productgird.html">Samsung</a></li>
+                              <li><a href="productgird.html">Xiaomi</a></li>
+                              <li><a href="productgird.html">HTC</a></li>
+                              <li><a href="productgird.html">Sony</a></li>
+                              <li><a href="productgird.html">Nokia</a></li>
+                            </ul>
+                          </div>
+                          <div class="col-md-6 col-sm-6">
+                            <ul class="mega-menu-links">
+                              <strong><li><h6>Tầm giá</h6></li></strong>
+                              <li><a href="productgird.html">- Dưới 3 triệu</a></li>
+                              <li><a href="productgird.html">- Từ 3 đến 5 triệu</a></li>
+                              <li><a href="productgird.html">- Từ 5 đến 7 triệu</a></li>
+                              <li><a href="productgird.html">- Từ 7 đến 9 triệu</a></li>
+                              <li><a href="productgird.html">- Từ 9 đến 12 triệu</a></li>
+                              <li><a href="productgird.html">- Trên 12 triệu</a></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Phụ kiện</a>
+                      <div class="dropdown-menu mega-menu">
+                        <div class="row">
+                          <div class="col-md-6 col-sm-6">
+                            <ul class="mega-menu-links">
+                              <strong><li><h6>Sản phẩm</h6></li></strong>
+                              <li><a href="productgird.html">Ốp lưng</a></li>
+                              <li><a href="productgird.html">Bao da</a></li>
+                              <li><a href="productgird.html">Sạc</a></li>
+                              <li><a href="productgird.html">Pin dự phòng</a></li>
+                              <li><a href="productgird.html">Tai nghe</a></li>
+                              <li><a href="productgird.html">Kính cường lực</a></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="dropdown-white"><a href="productgird.html">Xả hàng</a></li>
+                    <li class="dropdown-white"><a href="productgird.html">Tin tức</a></li>
+                    <li class="dropdown-white"><a href="productgird.html">Liên hệ</a></li>
+                    <li class="dropdown-white"><a href="contact.html">Hỗ trợ</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="notie"><%= notice %></p>
+      <p class="alert"><%= alert%></p>
+      <%= yield %>
+      <div class="clearfix"></div>
+      <div class="container_fullwidth">
+        <div class="container">
+          <div class="our-brand">
+            <h3 class="title"><strong>Các thương hiện điện thoại nổi tiếng </strong></h3>
+            <div class="control"><a id="prev_brand" class="prev" href="#">&lt;</a><a id="next_brand" class="next" href="#">&gt;</a></div>
+            <ul id="braldLogo">
+              <li>
+                <ul class="brand_item">
+                  <li>
+                    <a href="#">
+                      <div class="brand-logo"><%= image_tag("apple.png", alt: "") %></div>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <div class="brand-logo"><%= image_tag("samsung.png", alt: "") %></div>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <div class="brand-logo"><%= image_tag("xiaomi.png", alt: "") %></div>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <div class="brand-logo"><%= image_tag("nokia.png", alt: "") %></div>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <div class="brand-logo"><%= image_tag("htc.png", alt: "") %></div>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <ul class="brand_item">
+                  <li>
+                    <a href="#">
+                      <div class="brand-logo"><%= image_tag("apple.png", alt: "") %></div>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <div class="brand-logo"><%= image_tag("samsung.png", alt: "") %></div>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <div class="brand-logo"><%= image_tag("xiaomi.png", alt: "") %></div>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <div class="brand-logo"><%= image_tag("nokia.png", alt: "") %></div>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <div class="brand-logo"><%= image_tag("htc.png", alt: "") %></div>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="footer">
+        <div class="footer-info">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="footer-logo"><a href="#"><%= image_tag("logo.png", alt: "") %></a></div>
+              </div>
+              <div class="col-md-3 col-sm-6">
+                <h4 class="title" style="float: right;"><strong>Thông tin liên hệ</strong></h4>
+                <p>Kim Hoàng, Vân Canh, Hoài Đức, Hanoi , Vietnam</p>
+                <p>Di động : 0164.806.2543</p>
+                <p>Email : tdtrung5893@gmail.com</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="copyright-info">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-6">
+                <p>Copyright © 2018. Designed by <a href="#">Trần Đức Trung</a>. All rights reseved</p>
+                </div>
+              <div class="col-md-6">
+                <ul class="social-icon">
+                  <li><a href="#" class="linkedin"></a></li>
+                  <li><a href="#" class="google-plus"></a></li>
+                  <li><a href="#" class="twitter"></a></li>
+                  <li><a href="https://www.facebook.com/tdtrung93" class="facebook" target="_BLANK"></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> 
+    </div>
+  <script type="text/javascript">
+    $('document').ready(function() {
+      $('.delete-cart').click(function() {
+              
+      })
+    });
+  </script>
   </body>
 </html>

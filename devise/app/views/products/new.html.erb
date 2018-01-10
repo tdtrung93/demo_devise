@@ -1,8 +1,8 @@
 <div class="container">
 	<div class="row">
 		<div class="col-sm-offset-5">
-			<h1>New Product</h1>
-  			<%= form_for(@product) do |f| %>
+			<h1 class="title">New Product</h1>
+  			<%= form_for @product, :html => {:multipart => true} do |f| %>
 			<div class="form-group">
 			    <%= f.label :name %>
 			    <%= f.text_field :name %>
@@ -19,6 +19,16 @@
 			</div>
 
 			<div class="form-group">
+			    <%= f.label :oldPrice, value: 'Old Price' %>
+			    <%= f.text_field :oldPrice %>
+			</div>
+
+			<div class="form-group">
+			    <%= f.label :offer %>
+			    <%= f.text_field :offer %>
+			</div>
+
+			<div class="form-group">
 			    <%= f.label :description %>
 			    <%= f.text_field :description %>
 			</div>
@@ -26,6 +36,16 @@
 			<div class="form-group">
 			  	<%= f.label :Quantity %>
 			  	<%= f.text_field :Quantity %>
+			</div>
+
+			<div class="form-group">
+				<%= f.label :image %>
+			    <%= f.file_field :image %>
+			    <% if f.object.image? %>
+			      <%= image_tag f.object.image.thumb.url %>
+			      <%= f.label :remove_image %>
+			      <%= f.check_box :remove_image %> 
+    			<% end %>
 			</div>
 
 			<div class="actions">

@@ -1,0 +1,93 @@
+<div class="container">
+  <p id="notice"><%= notice %></p>
+
+  <h1 style="color: blue;">Products</h1>
+
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Image</th>
+        <th>Brand</th>
+        <th>Price</th>
+        <th>Description</th>
+        <th>Quantity</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @products.each do |product| %>
+        <tr>
+          <td><%= product.name %></td>
+          <td><%= image_tag product.image_url.to_s %></td>
+          <td><%= product.brand %></td>
+          <td><%= product.price %></td>
+          <td><%= product.description %></td>
+          <td><%= product.Quantity %></td>
+          <td><%= link_to 'Show', product %></td>
+          <td><%= link_to 'Edit', edit_product_path(product) %></td>
+          <td><%= link_to 'Delete', product, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Image</th>
+        <th>Brand</th>
+        <th>Price</th>
+        <th>Description</th>
+        <th>Quantity</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% current_user.products.each do |product| %>
+        <tr>
+          <td><%= product.name %></td>
+          <td><%= image_tag product.image_url.to_s %></td>
+          <td><%= product.brand %></td>
+          <td><%= product.price %></td>
+          <td><%= product.description %></td>
+          <td><%= product.Quantity %></td>
+          <td><%= link_to 'Show', product %></td>
+          <td><%= link_to 'Edit', edit_product_path(product) %></td>
+          <td><%= link_to 'Delete', product, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div class="container">
+  <div class="row">
+    <% @products.each do |product| %>
+        <div class="col-md-3 col-sm-6">
+          <div class="products">
+            <div class="thumbnail">
+              <%= image_tag product.image %>
+            </div>
+            <div class="content">
+              <a class="productname"><%= product.name %></a>
+            </div>
+            <h4 class="price">
+              <%= product.price %>
+            </h4>
+            <div class="button_group">
+              <button class="button add-cart" type="button">Thêm vào giỏ hàng</button>
+              <button class="button wishlist" type="button">
+                <i class="fa fa-heart-o"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+    <% end %>
+  </div>
+</div>
+  <br>
+  <div class="text-center" style="margin-bottom: 20px;">
+    <%= link_to 'New Product', new_product_path, class: "btn btn-primary" %>
+  </div>
+</div>
