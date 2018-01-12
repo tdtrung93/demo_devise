@@ -74,8 +74,8 @@
                 <div class="content">
                   <a class="productname"><%= product.name %></a>
                 </div>
-                <h4 class="price"><%= product.price %></h4>
-                <% if product.oldPrice > product.price.to_i %>
+                <h4 class="price"><%= product.price %>đ</h4>
+                <% if product.oldPrice > product.price %>
                   <h5 class="oldprice">Giá cũ: <%= product.oldPrice %>đ<h5>
                 <% end %>
                 <div class="button_group">
@@ -83,50 +83,6 @@
                   <button class="button wishlist" type="button">
                     <i class="fa fa-heart-o"></i>
                   </button>
-                  <div class="modal fade" id="myModal" role="dialog">
-                    <div class="modal-dialog modal-lg">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal">&times;</button>
-                          <h4 class="modal-title">Giỏ hàng của bạn (<p class="modal-title" style="display: inline; font-size: 16px;"><%= current_user.carts.count %></p> san pham)</h4>
-                        </div>
-                        <table class="table table-bordered table-hover" style="overflow: auto;max-height: 300px; border: none;">
-                          <thead>
-                            <tr class="active">
-                              <th>Sản phẩm</th>
-                              <th>Đơn giá</th>
-                              <th>Số lượng</th>
-                              <th>Thành tiền</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <% current_user.carts.each do |cart| %>
-                              <tr>
-                                <td>
-                                  <%= image_tag cart.product.image_url.to_s, style: "width: 60px; height: 80px; float: left;" %>
-                                  <div style="overflow: auto; margin-top: 10px; padding-left: 10px;"><%= cart.product.name %><div> 
-                                  <div class="delete-cart" style="margin-top: 10px;" data-cart-id="<%= cart.id %>"><span style="background: url(../images/trash.png) no-repeat;">...</span><buton type="button" class="btn" style="color: red; margin-left: 5px;">Huy bo san pham</button></div>
-                                </td>
-                                <td><%= cart.product.price %></td>
-                                <td><%= cart.product.Quantity %></td>
-                                <td><%= cart.product.price.to_i * cart.product.Quantity %></td>
-                              </tr>
-                            <% end -%>
-                          </tbody>
-                        </table>
-                        <div class="modal-footer">
-                          <h4>Thành tiền: <a style="color: red; font-size: 20px;"><%=  %>đ</a></h4>
-                          <h5>Giá đã bao gồm VAT</h5>
-                          <div>
-                            <a href="" data-dismiss="modal" style="color: blue;float: left; margin-top: 30px;">< Tiếp tục mua hàng</a>
-                          </div>
-                          <div class="btn btn-defaul" style="float: right;">
-                            <button type="button" style="background-color: red; color: #fff;">Tiến hành thanh toán</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -155,8 +111,9 @@
             console.log(data);
             var quantity_cart = data.quantity_cart;
             console.log(quantity_cart);
-            $('.cart_no, .modal-title1').html(quantity_cart);
+            $('.cart_no, p.modal-title').html(quantity_cart);
 
+            $('.cart_table').append("<tr> <td> <img src='" + data.cart.product.image.url + "'/><div>" + data.cart.product.name + "</div></td> <td class='price_product'>" + data.cart.product.price + "</td> <td><select class='value_quantity' data-cart-id='" + data.cart.id + "'><option value='1'>1</option><option value='2'>2</option><option value='3'>3</option><option value='4'>4</option><option value='5'>5</option><option value='6'>6</option><option value='7'>7</option><option value='8'>8</option><option value='9'>9</option><option value='10'>10</option><option value='... '>...</option></select></td> <td class='total_item' id='total_item_" + data.cart.id + "' data-cart-id='" + data.cart.id + "'>" + data.cart.product.price + "</td> </tr>");
           });
       });
 
@@ -176,6 +133,31 @@
           }
         });
       });
+
+      $cart_id = $('.total_item').data('cart-id');
+      update_total_cart();
+
+      var price_product = $('.price_product').html();
+      console.log(price_product);
+      $('.cart_table').on('change', '.value_quantity', function() {
+        var value_quantity = $(this).val();
+        var cart_id = $(this).data('cart-id');
+        console.log(value_quantity);
+        var a = parseInt(price_product) * value_quantity;
+        console.log(a);
+        $('#total_item_' + cart_id).html(a);
+        update_total_cart();
+      });
     });
+
+    function update_total_cart() {
+      var total_cart = 0;
+      var total_item = $('.total_item').each(function(item) {
+        total_cart += parseInt($(this).html());
+        console.log($(this).html());
+      });
+      $('.total_cart').html(total_cart);
+    }
+
   </script>
 </body>

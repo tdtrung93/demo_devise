@@ -15,7 +15,7 @@ class CartsController < ApplicationController
 		@cart.save
 		quantity_cart = current_user.carts.count
 		respond_to do |format|
-		  format.json {render json: {quantity_cart: quantity_cart, cart: @cart}}
+		  format.json {render json: {quantity_cart: quantity_cart, cart: @cart.as_json(:include => :product)}}
 		end
 	end
 

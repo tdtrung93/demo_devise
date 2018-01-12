@@ -111,14 +111,14 @@
                   <li class="option-cart">
                     <% if user_signed_in? %>
                       <a href="#" class="cart-icon" data-toggle="modal" data-target="#myModal">cart <span class="cart_no" ><%= current_user.carts.count %></span></a>
-                      <div class="modal fade" id="myModal" role="dialog" style="z-index: 1;">
-                        <div class="modal-dialog modal-lg" style="z-index: 1;">
-                          <div class="modal-content" style="z-index: 1;">
+                      <div class="modal fade" id="myModal" role="dialog">
+                        <div class="modal-dialog modal-lg">
+                          <div class="modal-content">
                             <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal">&times;</button>
-                              <h4 class="modal-title">Giỏ hàng của bạn (<p class="modal-title" style="display: inline; font-size: 16px;"><%= current_user.carts.count %></p> san pham)</h4>
+                              <h4 class="modal-title">Giỏ hàng của bạn (<p class="modal-title"><%= current_user.carts.count %></p> san pham)</h4>
                             </div>
-                            <table class="table table-bordered table-hover" style="overflow: auto;max-height: 300px; border: none;">
+                            <table class="table table-bordered table-hover">
                               <thead>
                                 <tr class="active">
                                   <th>Sản phẩm</th>
@@ -127,23 +127,37 @@
                                   <th>Thành tiền</th>
                                 </tr>
                               </thead>
-                              <tbody>
+                              <tbody class="cart_table">
                                 <% current_user.carts.each do |cart| %>
                                   <tr>
                                     <td>
-                                      <%= image_tag cart.product.image_url.to_s, style: "width: 60px; height: 80px; float: left;" %>
+                                      <%= image_tag cart.product.image_url.to_s, class: "cart-image" %>
                                       <div style="overflow: auto; margin-top: 10px; padding-left: 10px;"><%= cart.product.name %><div> 
-                                      <div class="delete-cart" style="margin-top: 10px;" data-cart-id="<%= cart.id %>"><span style="background: url(../images/trash.png) no-repeat;">...</span><buton type="button" class="btn" style="color: red; margin-left: 5px;">Huy bo san pham</button></div> 
+                                      <div class="delete-cart" data-cart-id="<%= cart.id %>"><button type="button" class="btn destroy-cart">Huy bo san pham</button></div> 
                                     </td>
-                                    <td><%= cart.product.price %></td>
-                                    <td><%= cart.product.Quantity %></td>
-                                    <td><%= cart.product.price.to_i * cart.product.Quantity %></td>
+                                    <td class="price_product"><%= cart.product.price %></td>
+                                    <td>
+                                      <select class="value_quantity" data-cart-id="<%= cart.id %>">
+                                        <option value="1"><%= cart.quantity %></option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="... ">...</option>
+                                      </select>
+                                    </td>
+                                    <td class="total_item" id="total_item_<%= cart.id %>" data-cart-id="<%= cart.id %>"><%= cart.product.price * cart.quantity %>đ</td>
                                   </tr>
                                 <% end -%>
                               </tbody>
                             </table>
                             <div class="modal-footer">
-                              <h4>Thành tiền: <a style="color: red; font-size: 20px;"><%=  %>đ</a></h4>
+                              <h4>Thành tiền: <p class="total_cart" style="color: red; font-size: 20px; display: inline;"></p><p style="color: red; font-size: 20px; display: inline;">đ</p></h4>
                               <h5>Giá đã bao gồm VAT</h5>
                               <div>
                                 <a href="" data-dismiss="modal" style="color: blue;float: left; margin-top: 30px;">< Tiếp tục mua hàng</a>

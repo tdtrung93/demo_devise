@@ -124,6 +124,11 @@
       .option-cart-item a{background: none;}
       .cart-item .right{float: right;text-align: center;width: auto;padding: 5px;}
       .cart-item .price{font-size: 14px;}
+      .modal-content .modal-header p{display: inline;font-size: 16px;}
+      .modal-content table {overflow: auto;max-height: 300px; border: none;}
+      .cart-image{width: 60px;height: 80px;float: left;}
+      .destroy-cart{color: red; font-size: 20px; background: url(../images/trash.png) center left no-repeat;}
+
       .option-cart-item .total{float: left;margin-left: 5px;vertical-align: middle;font-size: 13px;padding-top: 10px;text-transform: uppercase;}
       .option-cart-item .total strong{margin-left: 15px;font-size: 18px;color: #f7544a;}
       .option-cart-item .checkout{float: right;}
