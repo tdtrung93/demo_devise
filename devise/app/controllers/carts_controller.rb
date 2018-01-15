@@ -32,6 +32,9 @@ class CartsController < ApplicationController
 	end
 
 	def update
+		@cart = Cart.find(params[:id])
+		@cart.quantity = params[:quantity]
+		@cart.save
 	end
 
 	def destroy

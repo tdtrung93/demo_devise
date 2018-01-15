@@ -1,0 +1,15 @@
+Re-load lại trang "Thành tiền" và "tổng tiền" trở về với "Số lượng" = 1
+-> Do chưa update "Số lượng" lên server nên khi reload server đều trả về giá trị mặc định "Số lượng" = 1
+----->>>> Tạo hàm update trong cart.application
+
+Khi thêm 1 sản phẩm vào giỏ hàng:
++ nút "Hủy bỏ sản phẩm" không hoạt động, reload trang thì lại hoạt động bình thường
++ "Tổng tiền" không hoạt 
++ "Thành tiền" tính theo "Đơn giá" của sản phẩm đầu tiên
+->
+------>>>>
+
+Khi nhấn"Hủy bỏ sản phẩm" "tổng tiền" không thay đổi
+->
+------->>>>>
+

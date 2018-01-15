@@ -132,13 +132,13 @@
                                   <tr>
                                     <td>
                                       <%= image_tag cart.product.image_url.to_s, class: "cart-image" %>
-                                      <div style="overflow: auto; margin-top: 10px; padding-left: 10px;"><%= cart.product.name %><div> 
-                                      <div class="delete-cart" data-cart-id="<%= cart.id %>"><button type="button" class="btn destroy-cart">Huy bo san pham</button></div> 
+                                      <div class="cart-name"><%= cart.product.name %> 
+                                      <div class="delete-cart" data-cart-id="<%= cart.id %>"><button type="button" class="destroy-cart">Huy bo san pham</button></div> 
                                     </td>
                                     <td class="price_product"><%= cart.product.price %></td>
                                     <td>
-                                      <select class="value_quantity" data-cart-id="<%= cart.id %>">
-                                        <option value="1"><%= cart.quantity %></option>
+                                      <select class="value_quantity" data-cart-id="<%= cart.id %>" data-quantity="<%= cart.quantity %>">
+                                        <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
                                         <option value="4">4</option>
