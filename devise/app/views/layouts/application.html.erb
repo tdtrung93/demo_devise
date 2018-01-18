@@ -135,7 +135,7 @@
                                       <div class="cart-name"><%= cart.product.name %> 
                                       <div class="delete-cart" data-cart-id="<%= cart.id %>"><button type="button" class="destroy-cart">Huy bo san pham</button></div> 
                                     </td>
-                                    <td class="price_product"><%= cart.product.price %></td>
+                                    <td class="price_product" data-price-product-value="<%= cart.product.price %>"><%= cart.product.price %></td>
                                     <td>
                                       <select class="value_quantity" data-cart-id="<%= cart.id %>" data-quantity="<%= cart.quantity %>">
                                         <option value="1">1</option>
@@ -148,16 +148,15 @@
                                         <option value="8">8</option>
                                         <option value="9">9</option>
                                         <option value="10">10</option>
-                                        <option value="... ">...</option>
                                       </select>
                                     </td>
-                                    <td class="total_item" id="total_item_<%= cart.id %>" data-cart-id="<%= cart.id %>"><%= cart.product.price * cart.quantity %>đ</td>
+                                    <td class="total_item" id="total_item_<%= cart.id %>" data-cart-id="<%= cart.id %>" data-total-item-value="<%= cart.product.price * cart.quantity %>"><%= cart.product.price * cart.quantity %>đ</td>
                                   </tr>
                                 <% end -%>
                               </tbody>
                             </table>
                             <div class="modal-footer">
-                              <h4>Thành tiền: <p class="total_cart" style="color: red; font-size: 20px; display: inline;"></p><p style="color: red; font-size: 20px; display: inline;">đ</p></h4>
+                              <h4>Thành tiền: <p class="total_cart" data-total-cart-value="" style="color: red; font-size: 20px; display: inline;"></p><p style="color: red; font-size: 20px; display: inline;">đ</p></h4>
                               <h5>Giá đã bao gồm VAT</h5>
                               <div>
                                 <a href="" data-dismiss="modal" style="color: blue;float: left; margin-top: 30px;">< Tiếp tục mua hàng</a>

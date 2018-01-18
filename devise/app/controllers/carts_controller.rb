@@ -1,7 +1,11 @@
 class CartsController < ApplicationController
 
 	def index
+		@product = Product.all
 		@carts = current_user.carts
+		respond_to do |format|
+			format.json{render json: {carts: @carts.as_json(:include => :product)}}
+		end
 	end
 
 	def new		

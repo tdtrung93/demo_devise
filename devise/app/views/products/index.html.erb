@@ -104,43 +104,41 @@
       $('.add-cart').click(function() {
         var item_id = $(this).data('item-id');
         var add_cart = $(this);
+        update_cart_details();
         $.post("/carts", {
           product_id: item_id,
         }, function(data, status){
             var quantity_cart = data.quantity_cart;
             $('.cart_no, p.modal-title').html(quantity_cart);
-
-            $('.cart_table').append("<tr> <td> <img class='cart-image' src='" + data.cart.product.image.url + "' /><div class='cart-name'>" + data.cart.product.name + " <div class='delete-cart' data-cart-id='" + data.cart.id + "'><button type='button' class='destroy-cart'>Huy bo san pham</button></div></td> <td class='price_product'>" + data.cart.product.price + "</td> <td><select class='value_quantity' data-cart-id='" + data.cart.id + "' data-quantity='1'><option value='1'>1</option><option value='2'>2</option><option value='3'>3</option><option value='4'>4</option><option value='5'>5</option><option value='6'>6</option><option value='7'>7</option><option value='8'>8</option><option value='9'>9</option><option value='10'>10</option><option value='... '>...</option></select></td> <td class='total_item' id='total_item_" + data.cart.id + "' data-cart-id='" + data.cart.id + "'>" + data.cart.product.price + "</td> </tr>");
+            add_product_to_table(data.cart);
             update_quantity_select();
             var total_cart = 0;
             var total_item = $('.total_item').each(function(item) {
-              total_cart += parseInt($(this).html());
+              total_cart += parseInt($(this).data('total-item-value'));
             });
-            $('.total_cart').html(total_cart);
+            $('.total_cart').html(total_cart.toLocaleString());
         });
+      });
+
+      $('.cart-icon').click(function() {
+        update_cart_details();
       });
 
       $('.cart_table').on('click', '.delete-cart', function() {
         var cart_id = $(this).data('cart-id');
         var delete_cart = $(this);
-        var total_item = $(this).closest('tr').find('.total_item').html();
+        var total_item = $(this).closest('tr').find('.total_item').data('total-item-value');
         $.ajax({
           url: '/carts/' + cart_id,
           method: 'DELETE',
           success: function(data) {
             var quantity_cart = data.quantity_cart;
             $('.cart_no, p.modal-title').html(quantity_cart);
-            delete_cart.closest('tr').hide(500);
-            var total_cart = $('.total_cart').html();
-            var total_cart_after_delete = parseInt(total_cart) - parseInt(total_item);
-            $('.total_cart').html(total_cart_after_delete);
-            console.log(total_cart_after_delete);
-          }
+            delete_cart.closest('tr').empty(300);
+            update_total_cart();          }
         });
       });
 
-      $cart_id = $('.total_item').data('cart-id');
-      update_total_cart();
       $('.cart_table').on('change', '.value_quantity', function() {
         var value_quantity = $(this).val();
         var cart_id = $(this).data('cart-id');
@@ -151,16 +149,22 @@
           success: function(data) {
           }
         });
-        var price_product = $(this).closest('tr').find('.price_product').html();
+        var price_product = $(this).closest('tr').find('.price_product').data('price-product-value');
         var a = parseInt(price_product) * value_quantity;
         $('#total_item_' + cart_id).html(a +'đ');
+        $(this).data('quantity', value_quantity);
         update_total_cart();
       });
     });
 
+    function update_quantity_cart(quantity_cart) {
+      $('.cart_no, p.modal-title').html(quantity_cart);
+    }
+
     function update_quantity_select() {
       $('.value_quantity').each(function(quantity) {
         var quantity = $(this).data('quantity');
+        console.log(quantity);
         $(this).val(quantity);
       });
     }
@@ -168,9 +172,27 @@
     function update_total_cart() {
       var total_cart = 0;
       var total_item = $('.total_item').each(function(item) {
-        total_cart += parseInt($(this).html());
+        total_cart += parseInt($(this).data('total-item-value'));
+        console.log(total_cart);
       });
-      $('.total_cart').html(total_cart);
+      $('.total_cart').html(total_cart.toLocaleString());
+      console.log(total_cart.toLocaleString());
+    }
+
+    function add_product_to_table(cart) {
+      $('.cart_table').append("<tr> <td> <img class='cart-image' src='" + cart.product.image.url + "' /><div class='cart-name'>" + cart.product.name + " <div class='delete-cart' data-cart-id='" + cart.id + "'><button type='button' class='destroy-cart'>Huy bo san pham</button></div></td> <td class='price_product' data-price-product-value='" + cart.product.price + "'>" + cart.product.price + "</td> <td><select class='value_quantity' data-cart-id='" + cart.id + "' data-quantity='1'><option value='1'>1</option><option value='2'>2</option><option value='3'>3</option><option value='4'>4</option><option value='5'>5</option><option value='6'>6</option><option value='7'>7</option><option value='8'>8</option><option value='9'>9</option><option value='10'>10</option><option value='... '>...</option></select></td> <td class='total_item' data-total-item-value='" + cart.product.price * cart.quantity + "' id='total_item_" + cart.id + "' data-cart-id='" + cart.id + "' >" + cart.product.price + "</td> </tr>");
+    }
+
+    function update_cart_details() {
+      $.get("/carts", function(data, status){
+        console.log(data);
+        $('.cart_table').html('');
+        update_quantity_cart(data.carts.length);
+        for (i = 0; i < data.carts.length; i++) {
+          add_product_to_table(data.carts[i]);
+        }
+        update_total_cart();
+      });
     }
 
   </script>

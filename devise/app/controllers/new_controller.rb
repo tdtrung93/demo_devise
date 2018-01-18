@@ -8,4 +8,8 @@ class NewController < ApplicationController
 
 	def destroy		
 	end
+
+	def index
+		@products = Product.all
+	end
 end
