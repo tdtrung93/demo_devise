@@ -63,28 +63,30 @@
         <div class="row">
           <% @products.each do |product| %>
             <div class="col-md-3 col-sm-2 col-xs-4">
-              <div class="products">
-                <% if product.offer == nil %>
-                <% else %>
-                  <div class="offer">-<%= product.offer %>%</div>
-                <% end %>
-                <div class="thumbnail123">
-                  <a href="details.html"><%= image_tag product.image %></a>
+              <%= link_to product, target: :blank do %>
+                <div class="products">
+                  <% if product.offer == nil %>
+                  <% else %>
+                    <div class="offer">-<%= product.offer %>%</div>
+                  <% end %>
+                  <div class="thumbnail123">
+                    <%= image_tag product.image %>
+                  </div>
+                  <div class="content">
+                    <div class="productname"><%= product.name %></div>
+                  </div>
+                  <h4 class="price"><%= product.price %>đ</h4>
+                  <% if product.oldPrice > product.price %>
+                    <h5 class="oldprice">Giá cũ: <%= product.oldPrice %>đ<h5>
+                  <% end %>
+                  <div class="button_group">
+                    <button data-toggle="modal" data-target="#myModal" class="button add-cart" type="button" data-item-id="<%= product.id %>">Thêm vào giỏ hàng</button>
+                    <button class="button wishlist" type="button">
+                      <i class="fa fa-heart-o"></i>
+                    </button>
+                  </div>
                 </div>
-                <div class="content">
-                  <a class="productname"><%= product.name %></a>
-                </div>
-                <h4 class="price"><%= product.price %>đ</h4>
-                <% if product.oldPrice > product.price %>
-                  <h5 class="oldprice">Giá cũ: <%= product.oldPrice %>đ<h5>
-                <% end %>
-                <div class="button_group">
-                  <button data-toggle="modal" data-target="#myModal" class="button add-cart" type="button" data-item-id="<%= product.id %>">Thêm vào giỏ hàng</button>
-                  <button class="button wishlist" type="button">
-                    <i class="fa fa-heart-o"></i>
-                  </button>
-                </div>
-              </div>
+              <% end %>
             </div>
           <% end %>
         </div>
@@ -93,14 +95,12 @@
   </div>
   <script type="text/javascript">
     $('document').ready(function() {
-
       var token = $( 'meta[name="csrf-token"]' ).attr( 'content' );
       $.ajaxSetup( {
         beforeSend: function ( xhr ) {
           xhr.setRequestHeader( 'X-CSRF-Token', token );
         }
       });
-
       $('.add-cart').click(function() {
         var item_id = $(this).data('item-id');
         var add_cart = $(this);
@@ -119,11 +119,10 @@
             $('.total_cart').html(total_cart.toLocaleString());
         });
       });
-
       $('.cart-icon').click(function() {
         update_cart_details();
-      });
 
+      });
       $('.cart_table').on('click', '.delete-cart', function() {
         var cart_id = $(this).data('cart-id');
         var delete_cart = $(this);
@@ -138,10 +137,10 @@
             update_total_cart();          }
         });
       });
-
       $('.cart_table').on('change', '.value_quantity', function() {
         var value_quantity = $(this).val();
         var cart_id = $(this).data('cart-id');
+        $(this).data('quantity', value_quantity);
         $.ajax({
           url: '/carts/' + cart_id,
           method: 'PUT',
@@ -151,38 +150,34 @@
         });
         var price_product = $(this).closest('tr').find('.price_product').data('price-product-value');
         var a = parseInt(price_product) * value_quantity;
-        $('#total_item_' + cart_id).html(a +'đ');
-        $(this).data('quantity', value_quantity);
+        $(this).closest('tr').find('.total_item').data('total-item-value', a);
+        $('#total_item_' + cart_id).html(a.toLocaleString() +'đ');
+        
+        console.log($(this).data('quantity'));
         update_total_cart();
       });
     });
-
     function update_quantity_cart(quantity_cart) {
       $('.cart_no, p.modal-title').html(quantity_cart);
     }
-
     function update_quantity_select() {
       $('.value_quantity').each(function(quantity) {
         var quantity = $(this).data('quantity');
-        console.log(quantity);
         $(this).val(quantity);
       });
     }
-
     function update_total_cart() {
       var total_cart = 0;
       var total_item = $('.total_item').each(function(item) {
+        console.log($(this).data('total-item-value'));
         total_cart += parseInt($(this).data('total-item-value'));
-        console.log(total_cart);
       });
       $('.total_cart').html(total_cart.toLocaleString());
       console.log(total_cart.toLocaleString());
     }
-
     function add_product_to_table(cart) {
-      $('.cart_table').append("<tr> <td> <img class='cart-image' src='" + cart.product.image.url + "' /><div class='cart-name'>" + cart.product.name + " <div class='delete-cart' data-cart-id='" + cart.id + "'><button type='button' class='destroy-cart'>Huy bo san pham</button></div></td> <td class='price_product' data-price-product-value='" + cart.product.price + "'>" + cart.product.price + "</td> <td><select class='value_quantity' data-cart-id='" + cart.id + "' data-quantity='1'><option value='1'>1</option><option value='2'>2</option><option value='3'>3</option><option value='4'>4</option><option value='5'>5</option><option value='6'>6</option><option value='7'>7</option><option value='8'>8</option><option value='9'>9</option><option value='10'>10</option><option value='... '>...</option></select></td> <td class='total_item' data-total-item-value='" + cart.product.price * cart.quantity + "' id='total_item_" + cart.id + "' data-cart-id='" + cart.id + "' >" + cart.product.price + "</td> </tr>");
+      $('.cart_table').append("<tr> <td> <img class='cart-image' src='" + cart.product.image.url + "' /><div class='cart-name'>" + cart.product.name + " <div class='delete-cart' data-cart-id='" + cart.id + "'><button type='button' class='destroy-cart'>Huy bo san pham</button></div></td> <td class='price_product' data-price-product-value='" + cart.product.price + "'>" + cart.product.price + "</td> <td><select class='value_quantity' data-cart-id='" + cart.id + "' data-quantity='" + cart.quantity + "'><option value='1'>1</option><option value='2'>2</option><option value='3'>3</option><option value='4'>4</option><option value='5'>5</option><option value='6'>6</option><option value='7'>7</option><option value='8'>8</option><option value='9'>9</option><option value='10'>10</option></select></td> <td class='total_item' data-total-item-value='" + cart.product.price * cart.quantity + "đ' id='total_item_" + cart.id + "' data-cart-id='" + cart.id + "' >" + cart.product.price * cart.quantity + "</td> </tr>");
     }
-
     function update_cart_details() {
       $.get("/carts", function(data, status){
         console.log(data);
@@ -191,9 +186,9 @@
         for (i = 0; i < data.carts.length; i++) {
           add_product_to_table(data.carts[i]);
         }
+        update_quantity_select();
         update_total_cart();
       });
     }
-
   </script>
 </body>
