@@ -104,20 +104,37 @@
       $('.add-cart').click(function() {
         var item_id = $(this).data('item-id');
         var add_cart = $(this);
-        update_cart_details();
-        $.post("/carts", {
-          product_id: item_id,
-        }, function(data, status){
-            var quantity_cart = data.quantity_cart;
-            $('.cart_no, p.modal-title').html(quantity_cart);
-            add_product_to_table(data.cart);
-            update_quantity_select();
-            var total_cart = 0;
-            var total_item = $('.total_item').each(function(item) {
-              total_cart += parseInt($(this).data('total-item-value'));
-            });
-            $('.total_cart').html(total_cart.toLocaleString());
-        });
+        $.get("/carts", function(data, status){
+          for (i = 0; i < data.carts.length; i++){
+            if (item_id == data.carts[i].product_id) {
+              var data_quantity = data.carts[i].quantity + 1;
+              $.ajax({
+                url: '/carts/' + data.carts[i].id,
+                method: 'PUT',
+                data: {quantity: data_quantity},
+                success: function(data) {
+                }
+              });
+              update_total_cart();
+            } 
+            else {
+              $.post("/carts", {
+                product_id: item_id,
+              }, function(data, status){
+                  var quantity_cart = data.quantity_cart;
+                  $('.cart_no, p.modal-title').html(quantity_cart);
+                  add_product_to_table(data.cart);
+                  update_quantity_select();
+                  var total_cart = 0;
+                  var total_item = $('.total_item').each(function(item) {
+                    total_cart += parseInt($(this).data('total-item-value'));
+                  });
+                  $('.total_cart').html(total_cart.toLocaleString());
+              }); 
+            }
+          }
+        });  
+        
       });
       $('.cart-icon').click(function() {
         update_cart_details();
@@ -151,9 +168,7 @@
         var price_product = $(this).closest('tr').find('.price_product').data('price-product-value');
         var a = parseInt(price_product) * value_quantity;
         $(this).closest('tr').find('.total_item').data('total-item-value', a);
-        $('#total_item_' + cart_id).html(a.toLocaleString() +'đ');
-        
-        console.log($(this).data('quantity'));
+        $('#total_item_' + cart_id).html(a.toLocaleString() +'đ');        
         update_total_cart();
       });
     });
@@ -169,18 +184,15 @@
     function update_total_cart() {
       var total_cart = 0;
       var total_item = $('.total_item').each(function(item) {
-        console.log($(this).data('total-item-value'));
         total_cart += parseInt($(this).data('total-item-value'));
       });
       $('.total_cart').html(total_cart.toLocaleString());
-      console.log(total_cart.toLocaleString());
     }
     function add_product_to_table(cart) {
       $('.cart_table').append("<tr> <td> <img class='cart-image' src='" + cart.product.image.url + "' /><div class='cart-name'>" + cart.product.name + " <div class='delete-cart' data-cart-id='" + cart.id + "'><button type='button' class='destroy-cart'>Huy bo san pham</button></div></td> <td class='price_product' data-price-product-value='" + cart.product.price + "'>" + cart.product.price + "</td> <td><select class='value_quantity' data-cart-id='" + cart.id + "' data-quantity='" + cart.quantity + "'><option value='1'>1</option><option value='2'>2</option><option value='3'>3</option><option value='4'>4</option><option value='5'>5</option><option value='6'>6</option><option value='7'>7</option><option value='8'>8</option><option value='9'>9</option><option value='10'>10</option></select></td> <td class='total_item' data-total-item-value='" + cart.product.price * cart.quantity + "đ' id='total_item_" + cart.id + "' data-cart-id='" + cart.id + "' >" + cart.product.price * cart.quantity + "</td> </tr>");
     }
     function update_cart_details() {
       $.get("/carts", function(data, status){
-        console.log(data);
         $('.cart_table').html('');
         update_quantity_cart(data.carts.length);
         for (i = 0; i < data.carts.length; i++) {
